@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import listing from "./views/listing.vue";
 import login from "./views/login.vue";
+import create from "./views/create.vue"
 
 
 
@@ -18,6 +19,10 @@ export default new VueRouter({
     path: "/listing",
     component: listing
   },
-  
+  {
+    name: "create",
+    path: "/create",
+    component: create 
+  },
 ]
 })

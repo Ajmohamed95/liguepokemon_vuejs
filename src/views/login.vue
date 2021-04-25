@@ -37,7 +37,7 @@ import axios from "axios";
                     this.error = true 
                   }
                   else{
-                    this.$router.replace({ name: "listing" })
+                    this.$router.replace({ name: "create" })
                   }
                 })
                 .catch(error => {
