@@ -64,6 +64,7 @@ export default {
           .post(this.urlcreate, this.carte)
           .then(response => {
             console.log(response.data)
+             this.$router.replace({ name: "listing" })
           })
           .catch(error => {
             console.log(error);

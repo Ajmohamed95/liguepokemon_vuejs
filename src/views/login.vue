@@ -32,6 +32,7 @@ import axios from "axios";
                       axios
                 .post("http://localhost:8000/API/logon", this.input)
                 .then(response => {
+                    console.log(response)
                   this.errorMsg = response.data.error;
                   if(this.errorMsg){
                     this.error = true 

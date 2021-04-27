@@ -14,24 +14,23 @@
         <th>modifier</th>
         <th>supprimer</th>
     </tr>
-    <tr>
-      <th><input type="text" name="cartenom" ></th>
-      <th><input type="number" min="1" max="100" name="puissance" ></th>
-      <th><input type="text" name="attaque" ></th>
-      <th><select name="isBrillant" id="Brillant">
+    <tr v-for="c in listcarte" v-bind:value="c.idcarte" :key="c.idcarte">
+      <th><input type="text" name="cartenom" v-model="c.nomcarte"></th>
+      <th><input type="number" min="1" max="100" name="puissance" v-model="c.puissance" ></th>
+      <th><input type="text" name="attaque" v-model="c.attaque"></th>
+      <th><input type="checkbox" id="brillant" name="brillant1" v-model="c.isBrillant" >
     
-      </select></th>
-      <th><select name="isRare" id="Rare">
-        
-          </select></th>
+      </th>
+      <th><input type="checkbox" id="rare" name="rare1" v-model="c.isRare" >
+         </th>
       <th>
-          <select name="pokemonattache" id="pokemon">
-        
-         </select>
+          <select name="pokemon" id="pokemon" v-model="carte.pokemon">
+            <option v-for="p in listpokemon" v-bind:value="p.idpokemon" :key="p.idpokemon"> {{p.nom}} </option> <!-- pour chaque élément dans liste pokemon, je crée option -->
+    </select>
       </th>
       <th><button name="update" value="update">update</button></th>
-      <th><button name="delete" value="delete">delete</button></th>
-      <th><input type="hidden" name="idpokemon" value="<%= listCarte[i].idpokemon %>"></th>
+      <th><button name="delete" value="delete" v-on:click="deletecarte (c.idcarte) ">delete</button></th>
+      <th><input type="hidden" name="idpokemon" v-model="c.idpokemon"></th>
     </tr>
   </table>
     
@@ -46,8 +45,9 @@ export default {
     data() {
       return {
         listpokemon : [],
-        url : "http://localhost:8000/API/pokemon",
-        urlcartes: "http://localhost:8000/API/newCarte",
+        listcarte: [],
+        url: "http://localhost:8000/API/listCarte",
+        urldelete: "http://localhost:8000/API/listCarte/",
           carte : {
             nom : "ma carte",
             attaque : "tete",
@@ -70,19 +70,22 @@ export default {
           axios
           .get(this.url)
           .then(response => {
-            this.listpokemon = response.data;
-            console.log(response.data)
+            this.listpokemon = response.data.pokemons;
+            this.listcarte = response.data.listCarte;
+            console.log(this.listcarte)
+            console.log(this.listpokemon)
           })
           .catch(error => {
             console.log(error);
             });
                 
       },
-      createcarte(){
+      deletecarte(idcarte){
          axios
-          .post(this.urlcreate, this.carte)
+          .delete(this.urldelete + idcarte)
           .then(response => {
             console.log(response.data)
+            this.$router.push({ name: "listing" })
           })
           .catch(error => {
             console.log(error);
