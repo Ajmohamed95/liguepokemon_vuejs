@@ -17,6 +17,8 @@ import axios from "axios";
         name: 'login',
         data() {
             return {
+                authenticated: false,
+                idutilisateur: 0,
                 input: {
                     uname: "",
                     psw: "",
@@ -33,12 +35,14 @@ import axios from "axios";
                 .post("http://localhost:8000/API/logon", this.input)
                 .then(response => {
                     console.log(response)
-                  this.errorMsg = response.data.error;
+                    this.idutilisateur = response.data.idutilisateur
+                    this.errorMsg = response.data.error;
                   if(this.errorMsg){
                     this.error = true 
                   }
                   else{
-                    this.$router.replace({ name: "create" })
+                    this.$emit("authenticated",true);
+                    this.$router.replace({ name: "listing", params:{idutilisateur: this.idutilisateur} })
                   }
                 })
                 .catch(error => {

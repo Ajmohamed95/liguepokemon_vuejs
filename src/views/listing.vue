@@ -1,8 +1,6 @@
 <template>
   <div id="listing">
 <h1>Liste des pokemons</h1>
-<a href="/collectionCarte">créer une carte</a>
-<a href="/logout">logout</a>
 <table style="width:100%">
     <tr>
         <th>Nom</th>
@@ -18,17 +16,17 @@
       <th><input type="text" name="cartenom" v-model="c.nomcarte"></th>
       <th><input type="number" min="1" max="100" name="puissance" v-model="c.puissance" ></th>
       <th><input type="text" name="attaque" v-model="c.attaque"></th>
-      <th><input type="checkbox" id="brillant" name="brillant1" v-model="c.isBrillant" >
+      <th><input type="checkbox" id="brillant" name="brillant1" v-model="c.IsBrillant" >
     
       </th>
-      <th><input type="checkbox" id="rare" name="rare1" v-model="c.isRare" >
+      <th><input type="checkbox" id="rare" name="rare1" v-model="c.IsRare" >
          </th>
       <th>
           <select name="pokemon" id="pokemon" v-model="carte.pokemon">
             <option v-for="p in listpokemon" v-bind:value="p.idpokemon" :key="p.idpokemon"> {{p.nom}} </option> <!-- pour chaque élément dans liste pokemon, je crée option -->
     </select>
       </th>
-      <th><button name="update" value="update">update</button></th>
+      <th><button name="update" value="update" v-on:click="updatecarte (c.idcarte) " >update</button></th>
       <th><button name="delete" value="delete" v-on:click="deletecarte (c.idcarte) ">delete</button></th>
       <th><input type="hidden" name="idpokemon" v-model="c.idpokemon"></th>
     </tr>
@@ -90,7 +88,19 @@ export default {
           .catch(error => {
             console.log(error);
             });
-      }
+      },
+        updatecarte(idcarte){
+         axios
+          .put(this.urldelete + idcarte)
+          .then(response => {
+            console.log(response.data)
+            this.$router.push({ name: "listing" })
+          })
+          .catch(error => {
+            console.log(error);
+            });
+  }
+
   }
 
   }
