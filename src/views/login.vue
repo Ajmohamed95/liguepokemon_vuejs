@@ -5,6 +5,7 @@
         <input type="text" name="uname" v-model="input.uname" placeholder="Username" />
         <input type="password" name="psw" v-model="input.psw" placeholder="Password" />
         <button type="button" v-on:click="login()">Login</button>
+        <br><router-link  to="/inscription"> Inscription </router-link>
     <div v-if="error">
       {{errorMsg}}
     </div>
@@ -42,7 +43,8 @@ import axios from "axios";
                   }
                   else{
                     this.$emit("authenticated",true);
-                    this.$router.replace({ name: "listing", params:{idutilisateur: this.idutilisateur} })
+                    this.$emit("idutilisateur",this.idutilisateur);
+                    this.$router.replace({ name: "listing", params:{idutilisateur: this.idutilisateur, authenticated: true } })
                   }
                 })
                 .catch(error => {

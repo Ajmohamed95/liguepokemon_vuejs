@@ -43,6 +43,9 @@ export default {
       }
     },
   mounted(){
+      if(!this.$route.params.authenticated) {
+      this.$router.replace({ name: "login" });
+            }
     this.getpokemon()
   },
   
@@ -60,11 +63,13 @@ export default {
                 
       },
       createcarte(){
+        this.carte.proprietaire = this.$route.params.idutilisateur
+        console.log(this.carte)
          axios
           .post(this.urlcreate, this.carte)
           .then(response => {
             console.log(response.data)
-             this.$router.replace({ name: "listing" })
+            this.$router.replace({ name: "listing", params:{idutilisateur: this.$route.params.idutilisateur} })
           })
           .catch(error => {
             console.log(error);

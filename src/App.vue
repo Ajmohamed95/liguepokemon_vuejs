@@ -3,16 +3,13 @@
     <div id="app">
 
         <div id="nav">
-
-            <router-link v-if="authenticated" to="/login" v-on:click.native="logout()" replace>Logout </router-link>
-
-            <router-link v-if="authenticated" to="/listing"> Liste carte </router-link>
-
-            <router-link v-if="authenticated" to="/create"> Create carte </router-link>
+          <router-link v-if="authenticated" to="/login" v-on:click.native="logout()" replace>Logout </router-link> 
+          <router-link v-if="authenticated" :to="{ name: 'listing', params: { idutilisateur: this.idutilisateur, authenticated: this.authenticated}}"> Liste carte </router-link>
+          <router-link v-if="authenticated" :to="{ name: 'create', params: { idutilisateur: this.idutilisateur, authenticated: this.authenticated}}"> create carte </router-link>
 
         </div>
 
-        <router-view @authenticated="setAuthenticated" />
+        <router-view @authenticated="setAuthenticated" @idutilisateur="setid" />
 
     </div>
 
@@ -22,12 +19,9 @@
 
 export default {
   name: 'App',
-  // components: {
-  //   HelloWorld
-  // }
   data : function(){
     return {
-    hidden : "",
+      idutilisateur: 0,
     authenticated: false,
     }
   },
@@ -42,11 +36,14 @@ export default {
   methods : {
       setAuthenticated(status) {
         this.authenticated = status;
+      },    
+      setid(id) {
+        this.idutilisateur = id;
       },
-
       logout() {
          this.authenticated = false;
          }
+         
   }
 }
 </script>

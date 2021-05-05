@@ -1,6 +1,7 @@
 <template>
   <div id="listing">
 <h1>Liste des pokemons</h1>
+{{idutilisateur}}
 <table style="width:100%">
     <tr>
         <th>Nom</th>
@@ -22,13 +23,12 @@
       <th><input type="checkbox" id="rare" name="rare1" v-model="c.IsRare" >
          </th>
       <th>
-          <select name="pokemon" id="pokemon" v-model="carte.pokemon">
+          <select name="pokemon" id="pokemon" v-model="c.pokemon">
             <option v-for="p in listpokemon" v-bind:value="p.idpokemon" :key="p.idpokemon"> {{p.nom}} </option> <!-- pour chaque élément dans liste pokemon, je crée option -->
     </select>
       </th>
-      <th><button name="update" value="update" v-on:click="updatecarte (c.idcarte) " >update</button></th>
+      <th><button name="update" value="update" v-on:click="updatecarte (c) " >update</button></th>
       <th><button name="delete" value="delete" v-on:click="deletecarte (c.idcarte) ">delete</button></th>
-      <th><input type="hidden" name="idpokemon" v-model="c.idpokemon"></th>
     </tr>
   </table>
     
@@ -42,31 +42,27 @@ export default {
   name: 'listing',
     data() {
       return {
+        idutilisateur : 0,
         listpokemon : [],
         listcarte: [],
         url: "http://localhost:8000/API/listCarte",
         urldelete: "http://localhost:8000/API/listCarte/",
-          carte : {
-            nom : "ma carte",
-            attaque : "tete",
-            puissance : 50,
-            isBrillant : 1,
-            isRare : 0,
-            proprietaire : 1,
-            pokemon : 1,
-          },
           error : false,
           errorMsg : "",
       }
     },
   mounted(){
+      if(!this.$route.params.authenticated) {
+      this.$router.replace({ name: "login" });
+            }
     this.getpokemon()
   },
   
   methods: {
       getpokemon() {
+        this.idutilisateur = this.$route.params.idutilisateur
           axios
-          .get(this.url)
+          .get(this.url + "/"+ this.idutilisateur)
           .then(response => {
             this.listpokemon = response.data.pokemons;
             this.listcarte = response.data.listCarte;
@@ -83,18 +79,19 @@ export default {
           .delete(this.urldelete + idcarte)
           .then(response => {
             console.log(response.data)
-            this.$router.push({ name: "listing" })
+            this.getpokemon()
           })
           .catch(error => {
             console.log(error);
             });
       },
-        updatecarte(idcarte){
+        updatecarte(c){
+        c.update = "update"
          axios
-          .put(this.urldelete + idcarte)
+          .put(this.urldelete + c.idcarte,c)
           .then(response => {
             console.log(response.data)
-            this.$router.push({ name: "listing" })
+            this.getpokemon()
           })
           .catch(error => {
             console.log(error);
